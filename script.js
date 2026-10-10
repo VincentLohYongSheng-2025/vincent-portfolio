@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (copyBtnText) copyBtnText.textContent = 'Copied!';
         copyToast.textContent = 'Address copied to clipboard.';
-        
+
         setTimeout(() => {
           if (copyBtnText) copyBtnText.textContent = 'Copy';
           copyToast.textContent = '';
@@ -146,5 +146,48 @@ document.addEventListener('DOMContentLoaded', () => {
     );
 
     revealElements.forEach(el => revealObserver.observe(el));
+  }
+
+  // 6. Lightweight pointer response for the original VL Power Core.
+  // One rAF is scheduled per pointer move; no continuous animation loop is used.
+  if (!prefersReducedMotion && window.matchMedia('(pointer: fine)').matches) {
+    const core = document.querySelector('[data-power-core]');
+    let framePending = false;
+    let pointerX = 0;
+    let pointerY = 0;
+
+    if (core) {
+      const setCoreTilt = () => {
+        const rect = core.getBoundingClientRect();
+        const x = (pointerX - rect.left) / rect.width - 0.5;
+        const y = (pointerY - rect.top) / rect.height - 0.5;
+        core.style.transform = `rotateX(${(-y * 7).toFixed(2)}deg) rotateY(${(x * 9).toFixed(2)}deg)`;
+        framePending = false;
+      };
+
+      core.addEventListener('pointermove', (event) => {
+        pointerX = event.clientX;
+        pointerY = event.clientY;
+        if (!framePending) {
+          framePending = true;
+          window.requestAnimationFrame(setCoreTilt);
+        }
+      });
+
+      core.addEventListener('pointerleave', () => {
+        core.style.transform = '';
+      });
+    }
+
+    // Small magnetic pull for primary calls-to-action only.
+    document.querySelectorAll('.hero-actions .btn').forEach((button) => {
+      button.addEventListener('pointermove', (event) => {
+        const rect = button.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width - 0.5;
+        const y = (event.clientY - rect.top) / rect.height - 0.5;
+        button.style.transform = `translate(${(x * 5).toFixed(1)}px, ${(y * 4).toFixed(1)}px)`;
+      });
+      button.addEventListener('pointerleave', () => { button.style.transform = ''; });
+    });
   }
 });
