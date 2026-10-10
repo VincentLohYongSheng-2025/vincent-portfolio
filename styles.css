@@ -1485,6 +1485,7 @@ body.editorial-body {
   .project-entry:hover, .btn:hover { transform: none; }
 }
 
+/* Removed legacy dashboard styling.
 box-shadow: 0 10px 40px rgba(7, 13, 24, 0.4),
 0 4px 0 #070d18;
 position: relative;
@@ -1492,6 +1493,7 @@ overflow: hidden;
 color: #f1f5f9;
 transition: border-color var(--transition-base);
 }
+*/
 
 /* Subtle arcade grid overlay inside frame */
 .arena-arcade-frame::before {
