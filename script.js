@@ -1,193 +1,264 @@
-/**
- * Vincent Loh Yong Sheng — Personal Portfolio
- * Editorial Script: Smooth navigation, copy email action, Malaysia local clock, reveal animations
- */
-
+/** Portfolio navigation and accessible, event-driven interactions. */
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Live Malaysia Local Time Clock (MYT, UTC+8)
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+  // Malaysia time is content, so it continues to work with or without WebGL.
   const clockElement = document.getElementById('live-clock');
-  function updateMalaysiaClock() {
-    if (!clockElement) return;
-    try {
-      const now = new Date();
-      // Format to Asia/Kuala_Lumpur
-      const options = {
-        timeZone: 'Asia/Kuala_Lumpur',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-      };
-      const formatter = new Intl.DateTimeFormat('en-GB', options);
-      clockElement.textContent = `${formatter.format(now)} MYT`;
-    } catch (e) {
-      // Fallback
-      const d = new Date();
-      clockElement.textContent = d.toTimeString().split(' ')[0];
-    }
+  const timeFormat = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Kuala_Lumpur', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+  });
+  function updateClock() {
+    if (clockElement) clockElement.textContent = `${timeFormat.format(new Date())} MYT`;
   }
-  updateMalaysiaClock();
-  setInterval(updateMalaysiaClock, 1000);
+  updateClock();
+  setInterval(updateClock, 1000);
 
-  // 2. Email Copy with Feedback Toast
-  const copyBtn = document.getElementById('copy-email-btn');
+  const copyButton = document.getElementById('copy-email-btn');
+  const copyText = document.getElementById('copy-btn-text');
   const copyToast = document.getElementById('copy-toast');
-  const copyBtnText = document.getElementById('copy-btn-text');
-  const emailToCopy = 'vincentlohys@gmail.com';
-
-  if (copyBtn && copyToast) {
-    copyBtn.addEventListener('click', async () => {
-      try {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          await navigator.clipboard.writeText(emailToCopy);
-        } else {
-          // Fallback using textarea
-          const textArea = document.createElement('textarea');
-          textArea.value = emailToCopy;
-          textArea.style.position = 'fixed';
-          textArea.style.opacity = '0';
-          document.body.appendChild(textArea);
-          textArea.select();
-          document.execCommand('copy');
-          document.body.removeChild(textArea);
-        }
-
-        if (copyBtnText) copyBtnText.textContent = 'Copied!';
-        copyToast.textContent = 'Address copied to clipboard.';
-
-        setTimeout(() => {
-          if (copyBtnText) copyBtnText.textContent = 'Copy';
-          copyToast.textContent = '';
-        }, 2600);
-      } catch (err) {
-        copyToast.textContent = 'vincentlohys@gmail.com';
+  let copyReset;
+  copyButton?.addEventListener('click', async () => {
+    const address = 'vincentlohys@gmail.com';
+    try {
+      if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(address);
+      else {
+        const field = document.createElement('textarea');
+        field.value = address;
+        field.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(field);
+        field.select();
+        const copied = document.execCommand('copy');
+        field.remove();
+        if (!copied) throw new Error('Clipboard unavailable');
       }
-    });
-  }
-
-  // 3. Mobile Navigation Menu Toggle
-  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-  const mainNav = document.getElementById('main-nav');
-  const navLinks = document.querySelectorAll('.nav-link');
-
-  if (mobileMenuBtn && mainNav) {
-    mobileMenuBtn.addEventListener('click', () => {
-      const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
-      mobileMenuBtn.setAttribute('aria-expanded', !isExpanded);
-      mainNav.classList.toggle('menu-open');
-    });
-
-    // Close menu when clicking a link
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenuBtn.setAttribute('aria-expanded', 'false');
-        mainNav.classList.remove('menu-open');
-      });
-    });
-
-    // Close on Escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && mainNav.classList.contains('menu-open')) {
-        mobileMenuBtn.setAttribute('aria-expanded', 'false');
-        mainNav.classList.remove('menu-open');
-        mobileMenuBtn.focus();
-      }
-    });
-  }
-
-  // 4. Subtle Scrollspy for Navigation Highlighting
-  const sections = document.querySelectorAll('section[id]');
-  function updateNavSpy() {
-    const scrollY = window.pageYOffset;
-
-    sections.forEach(current => {
-      const sectionHeight = current.offsetHeight;
-      const sectionTop = current.offsetTop - 120;
-      const sectionId = current.getAttribute('id');
-      const targetNavLink = document.querySelector(`.main-nav a[href*="#${sectionId}"]`);
-
-      if (targetNavLink) {
-        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-          targetNavLink.classList.add('active');
-        } else {
-          targetNavLink.classList.remove('active');
-        }
-      }
-    });
-  }
-  window.addEventListener('scroll', updateNavSpy, { passive: true });
-  updateNavSpy();
-
-  // 5. Subtle Reveal on Scroll (Respects prefers-reduced-motion)
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!prefersReducedMotion && 'IntersectionObserver' in window) {
-    const revealElements = document.querySelectorAll(
-      '.project-entry, .timeline-row, .award-card, .edu-item, .contact-card'
-    );
-
-    revealElements.forEach(el => {
-      el.classList.add('reveal-init');
-    });
-
-    const revealObserver = new IntersectionObserver(
-      (entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('reveal-visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        root: null,
-        rootMargin: '0px 0px -40px 0px',
-        threshold: 0.08
-      }
-    );
-
-    revealElements.forEach(el => revealObserver.observe(el));
-  }
-
-  // 6. Lightweight pointer response for the original VL Power Core.
-  // One rAF is scheduled per pointer move; no continuous animation loop is used.
-  if (!prefersReducedMotion && window.matchMedia('(pointer: fine)').matches) {
-    const core = document.querySelector('[data-power-core]');
-    let framePending = false;
-    let pointerX = 0;
-    let pointerY = 0;
-
-    if (core) {
-      const setCoreTilt = () => {
-        const rect = core.getBoundingClientRect();
-        const x = (pointerX - rect.left) / rect.width - 0.5;
-        const y = (pointerY - rect.top) / rect.height - 0.5;
-        core.style.transform = `rotateX(${(-y * 7).toFixed(2)}deg) rotateY(${(x * 9).toFixed(2)}deg)`;
-        framePending = false;
-      };
-
-      core.addEventListener('pointermove', (event) => {
-        pointerX = event.clientX;
-        pointerY = event.clientY;
-        if (!framePending) {
-          framePending = true;
-          window.requestAnimationFrame(setCoreTilt);
-        }
-      });
-
-      core.addEventListener('pointerleave', () => {
-        core.style.transform = '';
-      });
+      copyText.textContent = 'Copied!';
+      copyToast.textContent = 'Address copied to clipboard.';
+      clearTimeout(copyReset);
+      copyReset = setTimeout(() => {
+        copyText.textContent = 'Copy';
+        copyToast.textContent = '';
+      }, 2600);
+    } catch (_) {
+      copyToast.textContent = address;
     }
+    copyButton.focus({ preventScroll: true });
+  });
 
-    // Small magnetic pull for primary calls-to-action only.
-    document.querySelectorAll('.hero-actions .btn').forEach((button) => {
-      button.addEventListener('pointermove', (event) => {
-        const rect = button.getBoundingClientRect();
-        const x = (event.clientX - rect.left) / rect.width - 0.5;
-        const y = (event.clientY - rect.top) / rect.height - 0.5;
-        button.style.transform = `translate(${(x * 5).toFixed(1)}px, ${(y * 4).toFixed(1)}px)`;
-      });
-      button.addEventListener('pointerleave', () => { button.style.transform = ''; });
-    });
+  const menuButton = document.getElementById('mobile-menu-btn');
+  const navigation = document.getElementById('main-nav');
+  const navLinks = [...document.querySelectorAll('.nav-link')];
+  function closeMenu() {
+    menuButton?.setAttribute('aria-expanded', 'false');
+    navigation?.classList.remove('menu-open');
   }
+  menuButton?.addEventListener('click', () => {
+    const open = menuButton.getAttribute('aria-expanded') !== 'true';
+    menuButton.setAttribute('aria-expanded', String(open));
+    navigation.classList.toggle('menu-open', open);
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && navigation?.classList.contains('menu-open')) {
+      closeMenu();
+      menuButton.focus();
+    }
+  });
+  document.addEventListener('focusin', event => {
+    if (navigation?.classList.contains('menu-open') &&
+        !navigation.contains(event.target) && event.target !== menuButton) closeMenu();
+    event.target.closest('.depth-pending')?.classList.add('depth-visible');
+  });
+  matchMedia('(min-width: 769px)').addEventListener('change', closeMenu);
+
+  // Native anchor movement remains available to keyboard users and without JS.
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', () => {
+      const target = document.getElementById(link.hash.slice(1));
+      if (!target) return;
+      closeMenu();
+      target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
+    });
+  });
+
+  const header = document.querySelector('.site-header');
+  const experienceTimeline = document.querySelector('.experience-timeline');
+  const tracked = navLinks.map(link => ({ link, section: document.getElementById(link.hash.slice(1)), top: 0, bottom: 0 }))
+    .filter(item => item.section);
+  let scrollRange = 1;
+  let needsMeasure = true;
+  let progressFrame = 0;
+  function updateProgress() {
+    progressFrame = 0;
+    if (needsMeasure) {
+      tracked.forEach(item => {
+        const rect = item.section.getBoundingClientRect();
+        item.top = rect.top + scrollY - 120;
+        item.bottom = item.top + rect.height;
+      });
+      scrollRange = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+      needsMeasure = false;
+    }
+    const active = tracked.find(item => scrollY >= item.top && scrollY < item.bottom);
+    tracked.forEach(item => {
+      const selected = item === active;
+      item.link.classList.toggle('active', selected);
+      item.link.style.setProperty('--chapter-progress', clamp((scrollY - item.top) / (item.bottom - item.top), 0, 1).toFixed(4));
+      if (selected) item.link.setAttribute('aria-current', 'location');
+      else item.link.removeAttribute('aria-current');
+    });
+    header?.style.setProperty('--reading-progress', clamp(scrollY / scrollRange, 0, 1).toFixed(4));
+    if (experienceTimeline) {
+      const rect = experienceTimeline.getBoundingClientRect();
+      const timelineProgress = clamp((innerHeight * .72 - rect.top) / Math.max(1, rect.height), .04, 1);
+      experienceTimeline.style.setProperty('--timeline-progress', timelineProgress.toFixed(4));
+    }
+  }
+  function scheduleProgress() {
+    if (!progressFrame) progressFrame = requestAnimationFrame(updateProgress);
+  }
+  addEventListener('scroll', scheduleProgress, { passive: true });
+  addEventListener('resize', () => { needsMeasure = true; scheduleProgress(); }, { passive: true });
+  document.fonts?.ready.then(() => { needsMeasure = true; scheduleProgress(); });
+  if ('ResizeObserver' in window) new ResizeObserver(() => {
+    needsMeasure = true;
+    scheduleProgress();
+  }).observe(document.body);
+  scheduleProgress();
+
+  // The content is always readable; the observer adds depth only to visible panels.
+  const revealGroups = [
+    [...document.querySelectorAll('.about-statement, .domain-item')],
+    [...document.querySelectorAll('.project-entry')],
+    [...document.querySelectorAll('.timeline-row')],
+    [...document.querySelectorAll('.award-card')],
+    [...document.querySelectorAll('.edu-item')],
+    [...document.querySelectorAll('.side-quest-grid, .contact-card')]
+  ];
+  revealGroups.forEach(group => group.forEach((item,index) => item.style.setProperty('--reveal-index',String(index))));
+  const revealed = revealGroups.flat();
+  const headings = [...document.querySelectorAll('.section-meta-header')];
+  function setupReveals() {
+    if (reduced.matches || !('IntersectionObserver' in window)) {
+      document.body.classList.remove('depth-motion');
+      revealed.forEach(item => item.classList.add('depth-visible'));
+      headings.forEach(item => item.classList.add('section-entered'));
+      return;
+    }
+    document.body.classList.add('depth-motion');
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add(entry.target.classList.contains('section-meta-header') ? 'section-entered' : 'depth-visible');
+      observer.unobserve(entry.target);
+    }), { rootMargin: '0px 0px -5% 0px', threshold: .08 });
+    revealed.forEach(item => {
+      item.classList.add('depth-pending');
+      observer.observe(item);
+    });
+    headings.forEach(item => observer.observe(item));
+  }
+  setupReveals();
+  reduced.addEventListener('change', () => {
+    if (reduced.matches) {
+      document.body.classList.remove('depth-motion');
+      revealed.forEach(item => item.classList.add('depth-visible'));
+      headings.forEach(item => item.classList.add('section-entered'));
+    }
+  });
+
+  // Fine pointer inputs update one frame at a time. Cards and buttons reset on exit.
+  const pointerBindings = [];
+  function bindPointer(element, kind) {
+    let bounds;
+    let frame = 0;
+    let x = 0;
+    let y = 0;
+    const reset = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      bounds = null;
+      element.style.removeProperty('--tilt-x');
+      element.style.removeProperty('--tilt-y');
+      element.style.removeProperty('--magnet-x');
+      element.style.removeProperty('--magnet-y');
+    };
+    element.addEventListener('pointerenter', () => { bounds = element.getBoundingClientRect(); });
+    element.addEventListener('pointermove', event => {
+      if (!finePointer.matches || reduced.matches || event.pointerType !== 'mouse' || document.hidden) return;
+      bounds ||= element.getBoundingClientRect();
+      x = clamp((event.clientX - bounds.left) / bounds.width - .5, -.5, .5);
+      y = clamp((event.clientY - bounds.top) / bounds.height - .5, -.5, .5);
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        if (kind === 'card') {
+          element.style.setProperty('--tilt-x', (x * 2.2).toFixed(2) + 'deg');
+          element.style.setProperty('--tilt-y', (-y * 2.2).toFixed(2) + 'deg');
+        } else {
+          element.style.setProperty('--magnet-x', (x * 8).toFixed(2) + 'px');
+          element.style.setProperty('--magnet-y', (y * 6).toFixed(2) + 'px');
+        }
+      });
+    }, { passive: true });
+    element.addEventListener('pointerleave', reset);
+    element.addEventListener('pointercancel', reset);
+    element.addEventListener('blur', reset);
+    pointerBindings.push(reset);
+  }
+  const projectEntries = [...document.querySelectorAll('.project-entry')];
+  const awardCards = [...document.querySelectorAll('.award-card')];
+  projectEntries.forEach(item => bindPointer(item, 'card'));
+  document.querySelectorAll('.hero-actions .btn, .quest-link, .copy-email-btn, .back-to-top')
+    .forEach(item => bindPointer(item, 'button'));
+  addEventListener('scroll', () => pointerBindings.forEach(reset => reset()), { passive: true });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) pointerBindings.forEach(reset => reset());
+  });
+
+  // Shared-scene markers respond to whichever factual record the visitor is reading.
+  function announceArenaFocus(kind = '', index = -1) {
+    dispatchEvent(new CustomEvent('arena:focus', { detail: { kind, index } }));
+  }
+  function bindSceneFocus(items, kind) {
+    items.forEach((item,index) => {
+      item.addEventListener('pointerenter', () => announceArenaFocus(kind,index));
+      item.addEventListener('focusin', () => announceArenaFocus(kind,index));
+      item.addEventListener('pointerleave', () => announceArenaFocus());
+      item.addEventListener('focusout', event => {
+        if (!item.contains(event.relatedTarget)) announceArenaFocus();
+      });
+    });
+    if (!reduced.matches && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(entries => {
+        const centered = entries.find(entry => entry.isIntersecting);
+        if (centered) announceArenaFocus(kind,items.indexOf(centered.target));
+      }, { rootMargin: '-42% 0px -42% 0px', threshold: 0 });
+      items.forEach(item => observer.observe(item));
+    }
+  }
+  bindSceneFocus(projectEntries,'project');
+  bindSceneFocus(awardCards,'award');
+
+  // One tiny celebration, only when a visitor intentionally presses a factual award stamp.
+  let celebrated = false;
+  document.querySelectorAll('.achievement-stamp').forEach(stamp => {
+    stamp.addEventListener('click', () => {
+      stamp.classList.remove('stamp-pressed');
+      void stamp.offsetWidth;
+      stamp.classList.add('stamp-pressed');
+      setTimeout(() => stamp.classList.remove('stamp-pressed'), 650);
+      if (celebrated || reduced.matches) return;
+      celebrated = true;
+      const entry = stamp.closest('.project-entry');
+      for (let index = 0; index < 5; index++) {
+        const piece = document.createElement('i');
+        piece.className = 'award-facet';
+        piece.setAttribute('aria-hidden', 'true');
+        piece.style.setProperty('--piece', String(index));
+        entry.appendChild(piece);
+        setTimeout(() => piece.remove(), 760);
+      }
+    });
+  });
 });
