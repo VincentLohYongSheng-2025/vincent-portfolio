@@ -71,14 +71,19 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   matchMedia('(min-width: 769px)').addEventListener('change', closeMenu);
 
-  // Native anchor movement remains available to keyboard users and without JS.
+  // Anchor navigation should land promptly; enhanced focus follows the actual section.
   document.querySelectorAll('a[href^="#"]').forEach(link => {
-    link.addEventListener('click', () => {
+    link.addEventListener('click', event => {
       const target = document.getElementById(link.hash.slice(1));
       if (!target) return;
+      event.preventDefault();
       closeMenu();
+      target.scrollIntoView({ behavior: 'auto', block: 'start' });
+      history.pushState(null, '', link.hash);
       target.setAttribute('tabindex', '-1');
       target.focus({ preventScroll: true });
+      needsMeasure = true;
+      scheduleProgress();
     });
   });
 
@@ -100,7 +105,11 @@ document.addEventListener('DOMContentLoaded', () => {
       scrollRange = Math.max(1, document.documentElement.scrollHeight - innerHeight);
       needsMeasure = false;
     }
-    const active = tracked.find(item => scrollY >= item.top && scrollY < item.bottom);
+    const readingLine = scrollY + (header?.offsetHeight || 0) + 32;
+    let active = tracked[0];
+    tracked.forEach(item => {
+      if (readingLine >= item.top) active = item;
+    });
     tracked.forEach(item => {
       const selected = item === active;
       item.link.classList.toggle('active', selected);
@@ -134,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
     [...document.querySelectorAll('.timeline-row')],
     [...document.querySelectorAll('.award-card')],
     [...document.querySelectorAll('.edu-item')],
-    [...document.querySelectorAll('.side-quest-grid, .contact-card')]
+    [...document.querySelectorAll('.contact-card')]
   ];
   revealGroups.forEach(group => group.forEach((item,index) => item.style.setProperty('--reveal-index',String(index))));
   const revealed = revealGroups.flat();
@@ -207,58 +216,21 @@ document.addEventListener('DOMContentLoaded', () => {
     pointerBindings.push(reset);
   }
   const projectEntries = [...document.querySelectorAll('.project-entry')];
-  const awardCards = [...document.querySelectorAll('.award-card')];
   projectEntries.forEach(item => bindPointer(item, 'card'));
-  document.querySelectorAll('.hero-actions .btn, .quest-link, .copy-email-btn, .back-to-top')
+  document.querySelectorAll('.hero-actions .btn, .copy-email-btn, .back-to-top')
     .forEach(item => bindPointer(item, 'button'));
   addEventListener('scroll', () => pointerBindings.forEach(reset => reset()), { passive: true });
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) pointerBindings.forEach(reset => reset());
   });
 
-  // Shared-scene markers respond to whichever factual record the visitor is reading.
-  function announceArenaFocus(kind = '', index = -1) {
-    dispatchEvent(new CustomEvent('arena:focus', { detail: { kind, index } }));
-  }
-  function bindSceneFocus(items, kind) {
-    items.forEach((item,index) => {
-      item.addEventListener('pointerenter', () => announceArenaFocus(kind,index));
-      item.addEventListener('focusin', () => announceArenaFocus(kind,index));
-      item.addEventListener('pointerleave', () => announceArenaFocus());
-      item.addEventListener('focusout', event => {
-        if (!item.contains(event.relatedTarget)) announceArenaFocus();
-      });
-    });
-    if (!reduced.matches && 'IntersectionObserver' in window) {
-      const observer = new IntersectionObserver(entries => {
-        const centered = entries.find(entry => entry.isIntersecting);
-        if (centered) announceArenaFocus(kind,items.indexOf(centered.target));
-      }, { rootMargin: '-42% 0px -42% 0px', threshold: 0 });
-      items.forEach(item => observer.observe(item));
-    }
-  }
-  bindSceneFocus(projectEntries,'project');
-  bindSceneFocus(awardCards,'award');
-
-  // One tiny celebration, only when a visitor intentionally presses a factual award stamp.
-  let celebrated = false;
+  // Award stamps retain a tactile press response without turning the page into a particle effect.
   document.querySelectorAll('.achievement-stamp').forEach(stamp => {
     stamp.addEventListener('click', () => {
       stamp.classList.remove('stamp-pressed');
       void stamp.offsetWidth;
       stamp.classList.add('stamp-pressed');
       setTimeout(() => stamp.classList.remove('stamp-pressed'), 650);
-      if (celebrated || reduced.matches) return;
-      celebrated = true;
-      const entry = stamp.closest('.project-entry');
-      for (let index = 0; index < 5; index++) {
-        const piece = document.createElement('i');
-        piece.className = 'award-facet';
-        piece.setAttribute('aria-hidden', 'true');
-        piece.style.setProperty('--piece', String(index));
-        entry.appendChild(piece);
-        setTimeout(() => piece.remove(), 760);
-      }
     });
   });
 });

@@ -1365,55 +1365,6 @@ body.editorial-body {
   box-shadow: 2px 2px 0 #D4C7EE;
 }
 
-/* One compact personal aside, with four original geometric icons. */
-.side-quest-section { padding: 2rem clamp(1.25rem, 4vw, 2.5rem); }
-.side-quest-grid {
-  display: grid;
-  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
-  gap: clamp(2rem, 5vw, 4rem);
-  align-items: start;
-  max-width: 1120px;
-  padding: clamp(1.5rem, 4vw, 3rem);
-  background: linear-gradient(115deg, #F0EFF8, #F7F2E5);
-  border: 1px solid var(--border-medium);
-  border-radius: 4px 24px 4px 24px;
-}
-.side-quest-intro {
-  margin-top: 1rem;
-  max-width: 36rem;
-  color: var(--text-secondary);
-  line-height: 1.7;
-}
-.trait-list {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem 1.25rem;
-}
-.trait-list li {
-  display: grid;
-  grid-template-columns: 30px 1fr;
-  column-gap: .65rem;
-  align-content: start;
-}
-.trait-list strong { font: 600 1rem/1.5 var(--font-display); }
-.trait-list li > span:last-child {
-  grid-column: 2;
-  margin-top: .25rem;
-  font-size: .875rem;
-  color: var(--text-secondary);
-  line-height: 1.55;
-}
-.trait-token {
-  width: 30px;
-  height: 30px;
-  padding: 3px;
-  border-radius: 4px 10px 4px 10px;
-}
-.trait-token--blue { color: #2846B1; background: #DEE5FC; }
-.trait-token--violet { color: #6343A3; background: #E8DFF6; }
-.trait-token--yellow { color: #775B12; background: #F9E9B7; }
-.trait-token--coral { color: #A33C2C; background: #FADED7; }
 .hero-actions .btn {
   transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px));
   min-height: 44px;
@@ -1440,7 +1391,6 @@ body.editorial-body {
   .core-stage { width: min(270px, 75vw); }
   .power-core { transform: rotateX(-7deg) rotateY(-12deg) rotateZ(-7deg); }
   .core-art { animation: none; }
-  .side-quest-grid { grid-template-columns: 1fr; gap: 1.75rem; }
   .section-meta-header { flex-wrap: wrap; gap: .5rem .75rem; }
   .section-caption { flex-basis: 100%; }
   .project-num-col { flex-wrap: wrap; }
@@ -1449,7 +1399,6 @@ body.editorial-body {
   .main-nav .nav-list li { width: 100%; }
 }
 @media (max-width: 480px) {
-  .trait-list { grid-template-columns: 1fr; }
   .editorial-badge { flex-wrap: wrap; }
   .footer-center, .email-action-row { flex-wrap: wrap; }
   .copy-email-btn { min-height: 44px; }
@@ -1599,69 +1548,9 @@ body.editorial-body {
   pointer-events: none;
 }
 .project-entry:focus-within::after { opacity: .65; transform: none; }
-.discovery-bridge {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding-top: 1.75rem;
-}
-.discovery-bridge::after { content: ''; height: 1px; background: var(--border-light); flex: 1; }
-.arena-facet {
-  display: inline-block;
-  width: 18px;
-  height: 24px;
-  flex-shrink: 0;
-  background: linear-gradient(145deg, #A896EB 0 40%, var(--arena-violet) 41% 75%, #44327B 76%);
-  clip-path: polygon(20% 0, 100% 12%, 75% 100%, 0 80%);
-}
-.quest-link {
-  display: inline-flex;
-  align-items: center;
-  gap: .75rem;
-  min-height: 44px;
-  padding: .5rem 0;
-  color: var(--text-primary);
-  font: 600 .875rem/1.5 var(--font-display);
-  text-decoration: underline;
-  text-decoration-color: var(--border-medium);
-  text-underline-offset: 5px;
-  transition: color 200ms ease, text-decoration-color 200ms ease;
-}
-.quest-link svg, .quest-return > span:last-child { transition: transform 250ms cubic-bezier(.16, 1, .3, 1); }
-.quest-link:hover, .quest-link:focus-visible { color: var(--arena-violet); text-decoration-color: currentColor; }
-.quest-return { margin-top: 1rem; }
-.side-quest-grid { isolation: isolate; }
-.side-quest-grid::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  border-top: 2px solid rgba(112,72,200,.3);
-  pointer-events: none;
-}
-.side-quest-grid::after {
-  content: '';
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
-  width: 80px;
-  height: 95px;
-  background: var(--arena-yellow);
-  opacity: .07;
-  clip-path: polygon(20% 0, 100% 12%, 75% 100%, 0 80%);
-  pointer-events: none;
-  z-index: -1;
-}
-.trait-token { box-shadow: 0 2px 0 rgba(44,41,83,.12); }
-.side-quest-grid.reveal-visible .trait-token { animation: trait-arrive 500ms cubic-bezier(.16, 1, .3, 1) both; }
-.trait-list li:nth-child(2) .trait-token { animation-delay: 60ms; }
-.trait-list li:nth-child(3) .trait-token { animation-delay: 120ms; }
-.trait-list li:nth-child(4) .trait-token { animation-delay: 180ms; }
-@keyframes trait-arrive { from { transform: translateY(5px) rotate(-8deg); } to { transform: none; } }
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .project-entry:hover .p-num { color: var(--entry-accent); }
   .project-entry:hover::after { opacity: .65; transform: none; }
-  .quest-link:hover svg, .quest-return:hover > span:last-child { transform: translateX(3px); }
   .hero-actions .btn:active { scale: .98; }
 }
 @media (max-width: 768px) {
@@ -1670,7 +1559,6 @@ body.editorial-body {
   .core-stage { transform: none; }
   .nav-link::after { right: auto; width: 48px; }
   .project-entry::after { display: none; }
-  .side-quest-grid.reveal-visible .trait-token { animation: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .reading-track { display: none; }
@@ -1678,11 +1566,11 @@ body.editorial-body {
   .section-meta-header::after { transform: none; }
   .hero-actions .btn:active { scale: 1; }
 }
-@media print { .reading-track, .discovery-bridge, .quest-return { display: none; } }
+@media print { .reading-track { display: none; } }
 
 /* ========================================================================
    THE ARENA WORLD
-   One sculptural WebGL layer, shared chapter surfaces, and restrained depth.
+   One sculptural WebGL layer contained within the hero visual.
    ======================================================================== */
 
 :root {
@@ -1709,53 +1597,18 @@ body.editorial-body { background: #faf7ef; }
 .nav-link.cta-link { background: var(--world-ink); }
 
 .arena-world {
-  position: fixed;
-  right: 0;
-  top: var(--header-height);
-  width: 46vw;
-  height: calc(100vh - var(--header-height));
-  height: calc(100dvh - var(--header-height));
-  z-index: 2;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
   opacity: 0;
   pointer-events: none;
   transition: opacity 440ms ease;
-  isolation: isolate;
+  overflow: hidden;
 }
 .world-live .arena-world:not(.is-dormant) { opacity: 1; }
-.arena-world::before {
-  content: '';
-  position: absolute;
-  width: min(70%, 530px);
-  aspect-ratio: 1;
-  left: 15%;
-  top: 13%;
-  background: linear-gradient(135deg, rgba(49,85,217,.14), rgba(112,72,200,.07) 54%, rgba(244,191,58,.15));
-  clip-path: polygon(23% 0, 100% 18%, 88% 83%, 35% 100%, 0 54%);
-  transform: rotate(-14deg);
-  z-index: -1;
-}
-.arena-world::after {
-  content: '';
-  position: absolute;
-  left: 16%;
-  bottom: 19%;
-  width: 66%;
-  height: 14%;
-  border-bottom: 3px solid rgba(49,85,217,.14);
-  border-left: 3px solid rgba(49,85,217,.14);
-  transform: skew(-21deg);
-  z-index: -1;
-}
 .arena-world canvas { display: block; width: 100%; height: 100%; }
-body[data-arena-chapter="projects"] .arena-world::before {
-  background: linear-gradient(130deg, rgba(112,72,200,.13), rgba(49,85,217,.06), rgba(244,191,58,.1));
-}
-body[data-arena-chapter="side-quest"] .arena-world::before {
-  background: linear-gradient(130deg, rgba(244,191,58,.18), rgba(112,72,200,.13));
-}
-body[data-arena-chapter="contact"] .arena-world::before {
-  background: linear-gradient(130deg, rgba(49,85,217,.11), rgba(232,110,89,.13));
-}
 
 /* Hero: the page opens beside the relic, with readable editorial copy. */
 .hero-section {
@@ -1789,7 +1642,7 @@ body[data-arena-chapter="contact"] .arena-world::before {
 .hero-highlights { border-top-width: 2px; }
 .highlight-item:first-child .highlight-val { color: #6f5108; }
 .highlight-item:nth-child(2) .highlight-val { color: #564093; }
-.hero-visual { min-height: 520px; }
+.hero-visual { position: relative; isolation: isolate; overflow: hidden; min-height: 520px; }
 .hero-visual .core-caption {
   position: absolute;
   left: 50%;
@@ -1844,7 +1697,6 @@ main > section:not(.hero-section) { position: relative; }
   border-bottom: 1px solid #ded9e9;
 }
 .projects-section::before,
-.side-quest-section::before,
 .contact-section::before {
   content: '';
   position: absolute;
@@ -1856,8 +1708,7 @@ main > section:not(.hero-section) { position: relative; }
   clip-path: polygon(29% 0, 100% 0, 100% 100%, 0 100%);
   pointer-events: none;
 }
-.projects-section .section-meta-header,
-.side-quest-section .section-meta-header { --chapter-accent: var(--world-violet); }
+.projects-section .section-meta-header { --chapter-accent: var(--world-violet); }
 .section-meta-header {
   perspective: 900px;
   border-bottom-color: rgba(49,85,217,.22);
@@ -1879,12 +1730,6 @@ main > section:not(.hero-section) { position: relative; }
   .experience-timeline,
   .awards-grid,
   .education-list { width: min(66%, 790px); }
-  .projects-section .discovery-bridge { width: min(66%, 790px); }
-  .side-quest-grid {
-    width: min(57vw,740px);
-    margin-left: max(0px,calc((100vw - var(--max-width))/2));
-    margin-right: auto;
-  }
   .contact-card { width: min(64%, 760px); }
 }
 
@@ -1948,7 +1793,6 @@ main > section:not(.hero-section) { position: relative; }
 .depth-motion .award-card.depth-pending:not(.depth-visible),
 .depth-motion .edu-item.depth-pending:not(.depth-visible),
 .depth-motion .contact-card.depth-pending:not(.depth-visible),
-.depth-motion .side-quest-grid.depth-pending:not(.depth-visible),
 .depth-motion .domain-item.depth-pending:not(.depth-visible),
 .depth-motion .about-statement.depth-pending:not(.depth-visible) {
   opacity: .72;
@@ -1981,51 +1825,6 @@ main > section:not(.hero-section) { position: relative; }
 @keyframes award-facet-fly {
   to { transform: translate(var(--dx),calc(-20px + var(--dy))) rotate(130deg); opacity: 0; }
 }
-.discovery-bridge { margin-top: .25rem; }
-.quest-link { transform: translate(var(--magnet-x,0px),var(--magnet-y,0px)); }
-.quest-link:active { scale: .96; }
-
-/* The personal aside is a small profile moment, separate from achievements. */
-.side-quest-section {
-  padding-top: clamp(5rem,8vw,8rem);
-  padding-bottom: clamp(5rem,8vw,8rem);
-  background: linear-gradient(118deg, #eeeafa, #f9f6ed 66%);
-}
-.side-quest-grid {
-  position: relative;
-  grid-template-columns: 1fr;
-  padding: clamp(1.5rem,3vw,2.8rem);
-  gap: 2rem;
-  background: rgba(255,255,255,.91);
-  border: 1px solid #d9d1ef;
-  border-top: 5px solid var(--world-violet);
-  border-radius: 3px 26px 3px 26px;
-  box-shadow: 10px 12px 0 rgba(112,72,200,.065), 0 26px 45px -38px #464071;
-}
-.side-quest-grid::before { border-top: 0; }
-.arena-profile-mark {
-  float: right;
-  display: grid;
-  place-items: center;
-  width: 58px;
-  height: 64px;
-  margin-left: .75rem;
-  background: linear-gradient(145deg,#394fba 0 48%,#7048c8 49% 76%,#df9e45 77%);
-  color: white;
-  font: 700 1.1rem/1 var(--font-display);
-  clip-path: polygon(18% 0,100% 12%,83% 100%,0 84%);
-  filter: drop-shadow(4px 5px 0 rgba(57,48,100,.16));
-}
-.side-quest-grid .section-number { color: #6246a5; }
-.trait-list { gap: 1rem; }
-.trait-list li {
-  grid-template-columns: 36px 1fr;
-  border-top: 1px solid #e5e0ef;
-  padding-top: 1rem;
-}
-.trait-token { width: 32px; height: 32px; box-shadow: 2px 3px 0 rgba(44,41,83,.11); }
-.side-quest-grid.depth-visible .trait-token { animation: trait-arrive 500ms var(--world-ease) both; }
-
 /* A quiet closing composition keeps contact details dominant. */
 .contact-section {
   background: linear-gradient(125deg,#faf7ef,#f4f4fc);
@@ -2049,7 +1848,6 @@ main > section:not(.hero-section) { position: relative; }
 .experience-section,
 .awards-section,
 .education-section,
-.side-quest-section,
 .contact-section { overflow: clip; }
 
 .profile-section::after,
@@ -2202,15 +2000,6 @@ main > section:not(.hero-section) { position: relative; }
   transform: perspective(1000px) translate3d(12px,14px,-34px) rotateY(-2deg);
 }
 
-.side-quest-grid { transform-style: preserve-3d; }
-.side-quest-grid::after {
-  background:
-    linear-gradient(135deg,rgba(49,85,217,.09),transparent 44%),
-    linear-gradient(315deg,rgba(244,191,58,.12),transparent 46%);
-}
-.arena-profile-mark { transform: translateZ(22px) rotate(-2deg); }
-.trait-token { transform: translateZ(14px); }
-
 .contact-card { position: relative; overflow: hidden; }
 .contact-card::after {
   content: '';
@@ -2249,18 +2038,11 @@ main > section:not(.hero-section) { position: relative; }
 }
 
 @media (max-width: 1024px) {
-  .arena-world {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-  }
   .hero-section { min-height: auto; }
   .hero-visual { min-height: 430px; }
   .hero-visual .core-caption { bottom: 0; }
-  .projects-editorial-list,.projects-section .discovery-bridge,.contact-card { width: 100%; }
-  .side-quest-grid { width: auto; margin-left: auto; margin-right: auto; }
-  .projects-section::before,.side-quest-section::before,.contact-section::before { width: 100%; opacity: .46; }
+  .projects-editorial-list,.contact-card { width: 100%; }
+  .projects-section::before,.contact-section::before { width: 100%; opacity: .46; }
 }
 @media (min-width: 1025px) {
   .hero-visual .core-caption { bottom: -1rem; }
@@ -2269,10 +2051,7 @@ main > section:not(.hero-section) { position: relative; }
   .hero-section { padding-top: 4rem; }
   .hero-visual { min-height: 320px; max-width: 100%; }
   .hero-visual .core-caption { bottom: 0; }
-  .arena-world::before { width: 58%; left: 21%; top: 17%; }
-  .arena-world::after { bottom: 15%; }
   .project-entry { grid-template-columns: 68px minmax(0,1fr); padding: 1.35rem 1rem; }
-  .side-quest-grid { grid-template-columns: 1fr; }
   .contact-section { min-height: auto; }
 }
 @media (max-width: 480px) {
@@ -2280,13 +2059,11 @@ main > section:not(.hero-section) { position: relative; }
   .project-entry { grid-template-columns: 1fr; gap: 1rem; }
   .project-num-col { flex-direction: row; align-items: center; gap: 1rem; }
   .project-summary { max-width: none; }
-  .arena-profile-mark { width: 46px; height: 52px; }
-  .trait-list { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
   .arena-world { display: none !important; }
   .hero-visual .vl-sculpture,.hero-visual .core-stage { display: block !important; }
-  .project-entry,.project-entry:hover,.hero-actions .btn,.quest-link { transform: none !important; translate: none !important; }
+  .project-entry,.project-entry:hover,.hero-actions .btn { transform: none !important; translate: none !important; }
   .depth-motion .section-meta-header .section-title { opacity: 1; transform: none; }
   .award-facet { display: none; }
 }
@@ -2294,4 +2071,298 @@ main > section:not(.hero-section) { position: relative; }
   .arena-world { display: none !important; }
   .hero-visual .vl-sculpture,.hero-visual .core-stage { display: block !important; }
   .project-entry { box-shadow: none; break-inside: avoid; }
+}
+
+/* ========================================================================
+   ARENA COHESION REFINEMENT
+   The VL relic remains the singular visual hero; all other treatments support
+   reading rather than competing as independent game-world objects.
+   ======================================================================== */
+
+.technical-grid-bg {
+  opacity: .2;
+  background-size: 48px 48px;
+}
+
+.status-indicator {
+  gap: .35rem;
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+  color: color-mix(in srgb, var(--text-secondary) 76%, transparent);
+  font-size: .66rem;
+}
+
+.status-dot {
+  width: 5px;
+  height: 5px;
+  opacity: .7;
+}
+
+.nav-link {
+  gap: .26rem;
+  color: color-mix(in srgb, var(--text-secondary) 88%, transparent);
+}
+
+.nav-link span {
+  font-size: .59rem;
+  opacity: .58;
+}
+
+.nav-link:hover,
+.nav-link.active { background-color: transparent; }
+
+.section-meta-header {
+  gap: .75rem;
+  margin-bottom: clamp(1.75rem, 3vw, 2.75rem);
+  padding-bottom: .8rem;
+  border-bottom-color: color-mix(in srgb, var(--text-primary) 12%, transparent);
+}
+
+.section-meta-header .section-number {
+  color: color-mix(in srgb, var(--chapter-accent) 70%, var(--text-muted));
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+}
+
+.section-meta-header .section-number::before { display: none; }
+
+.section-meta-header::after {
+  width: 44px;
+  height: 2px;
+  opacity: .72;
+}
+
+.section-caption {
+  font-size: .66rem;
+  letter-spacing: .055em;
+}
+
+/* The WebGL layer is strictly hero-only; no section receives a scene layer. */
+.arena-world::before,
+.arena-world::after,
+.profile-section::after,
+.experience-section::after,
+.awards-section::after,
+.education-section::after,
+.projects-section::before,
+.contact-section::before {
+  display: none;
+}
+
+.profile-section,
+.experience-section,
+.awards-section,
+.education-section,
+.contact-section {
+  background: transparent;
+}
+
+.projects-section {
+  background: linear-gradient(120deg, rgba(112,72,200,.035), rgba(250,247,239,.82) 42%, rgba(49,85,217,.025));
+  border-color: rgba(112,72,200,.12);
+}
+
+@media (min-width: 1025px) {
+  .about-grid,
+  .projects-editorial-list,
+  .experience-timeline,
+  .awards-grid,
+  .education-list { width: min(72%, 860px); }
+
+  .contact-card { width: min(70%, 820px); }
+}
+
+/* Existing entries stay editorial records: one edge, one lift, no visual noise. */
+.project-entry {
+  border-color: rgba(49,85,217,.14);
+  border-radius: 3px 12px 3px 12px;
+  background: rgba(255,255,255,.82);
+  box-shadow: 0 14px 28px -30px rgba(32,32,61,.7);
+}
+
+.project-entry:nth-child(3n + 2),
+.project-entry:nth-child(3n),
+.project-entry:nth-child(4) { border-radius: 3px 12px 3px 12px; }
+
+.project-entry:nth-child(4) { background: rgba(255,255,255,.82); }
+.project-entry::after { display: none; }
+.project-main-col::before { opacity: .28; }
+
+.project-entry:first-child {
+  border-color: rgba(180,136,20,.44);
+  box-shadow: 0 14px 28px -30px rgba(89,68,14,.48);
+}
+
+.depth-motion .project-entry.depth-pending:not(.depth-visible) {
+  --entry-depth: -16px;
+  --entry-reveal-angle: 1.5deg;
+  opacity: .9;
+}
+
+.depth-motion .timeline-row.depth-pending:not(.depth-visible),
+.depth-motion .award-card.depth-pending:not(.depth-visible),
+.depth-motion .edu-item.depth-pending:not(.depth-visible),
+.depth-motion .contact-card.depth-pending:not(.depth-visible),
+.depth-motion .domain-item.depth-pending:not(.depth-visible),
+.depth-motion .about-statement.depth-pending:not(.depth-visible) {
+  opacity: .82;
+  transform: translate3d(0,12px,0);
+}
+
+.award-facet { display: none; }
+
+.award-card {
+  border-radius: 3px 12px 3px 12px;
+  box-shadow: 0 12px 26px -30px rgba(32,32,61,.65);
+}
+
+.award-card::before,
+.award-card::after,
+.edu-item::after,
+.contact-card::after { display: none; }
+
+.contact-card {
+  border-top-width: 3px;
+  border-radius: 3px 16px 3px 16px;
+  box-shadow: 0 14px 28px -32px rgba(49,85,217,.45);
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .project-entry:hover {
+    translate: 0 -3px;
+    box-shadow: 0 20px 32px -30px rgba(32,32,61,.58);
+  }
+
+  .project-entry.has-achievement:hover { translate: 0 -4px; }
+  .award-card:hover { transform: translate3d(0,-3px,8px); box-shadow: 0 18px 30px -30px rgba(32,32,61,.54); }
+}
+
+@media (max-width: 1024px) {
+  .status-indicator { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .technical-grid-bg { opacity: .15; }
+  .depth-motion .project-entry.depth-pending:not(.depth-visible),
+  .depth-motion .timeline-row.depth-pending:not(.depth-visible),
+  .depth-motion .award-card.depth-pending:not(.depth-visible),
+  .depth-motion .edu-item.depth-pending:not(.depth-visible),
+  .depth-motion .contact-card.depth-pending:not(.depth-visible),
+  .depth-motion .domain-item.depth-pending:not(.depth-visible),
+  .depth-motion .about-statement.depth-pending:not(.depth-visible) {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ========================================================================
+   FUNCTIONAL ARENA PASS
+   A canvas is only visible after a renderer paints it. The fallback stays a
+   complete, intentional SVG composition rather than a failed WebGL shell.
+   ======================================================================== */
+
+html { scroll-behavior: auto; }
+
+.arena-world[hidden] { display: none !important; }
+.arena-world.is-measuring { display: block; visibility: hidden; opacity: 0; }
+.arena-world.is-ready { visibility: visible; }
+body.world-live .arena-world.is-ready { opacity: 1; }
+
+.webgl-fallback .hero-visual {
+  display: grid;
+  place-items: center;
+  min-height: clamp(360px, 34vw, 520px);
+}
+
+.webgl-fallback .core-caption { position: static; transform: none; margin-top: .5rem; }
+
+/* The content—not a faint right-side visual—owns the available desktop space. */
+.section-padding { padding-top: clamp(3.5rem, 6vw, 5.5rem); padding-bottom: clamp(3.5rem, 6vw, 5.5rem); }
+
+@media (min-width: 1025px) {
+  .about-grid,
+  .projects-editorial-list,
+  .experience-timeline,
+  .awards-grid,
+  .education-list,
+  .contact-card { width: 100%; max-width: none; }
+
+  .about-grid { grid-template-columns: minmax(0, 1fr) minmax(340px, .94fr); }
+  .awards-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .award-card.featured { grid-column: span 2; }
+
+  .contact-card {
+    display: grid;
+    grid-template-columns: minmax(0, .92fr) minmax(360px, 1.08fr);
+    align-items: start;
+    gap: clamp(2rem, 5vw, 5rem);
+  }
+
+  .contact-intro { margin-bottom: 0; }
+  .contact-details-grid { border-top: 0; border-left: 1px solid var(--border-light); padding: 0 0 0 clamp(2rem, 4vw, 4rem); }
+}
+
+/* Projects become a paced editorial list, with presentation strength tied to verified facts. */
+.projects-editorial-list { gap: 0; }
+.project-entry {
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--text-primary) 12%, transparent);
+  border-left: 3px solid var(--entry-accent);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: clamp(1.75rem, 3vw, 2.5rem) clamp(1rem, 2vw, 2rem);
+}
+
+.project-entry:nth-child(3n + 2),
+.project-entry:nth-child(3n),
+.project-entry:nth-child(4) { border-radius: 0; }
+.project-entry::before,
+.project-entry::after { display: none; }
+.project-main-col::before { opacity: 0; }
+.project-summary { max-width: 72ch; }
+
+.project-entry--champion {
+  margin-block: .5rem 1rem;
+  border: 1px solid rgba(180,136,20,.36);
+  border-left: 6px solid var(--world-yellow);
+  border-radius: 2px 18px 2px 18px;
+  background: linear-gradient(115deg, rgba(255,249,231,.96), rgba(255,255,255,.82));
+  box-shadow: 0 16px 32px -30px rgba(89,68,14,.65);
+}
+
+.project-entry--champion .project-title { font-size: clamp(1.55rem, 2.7vw, 2.15rem); }
+.project-entry--champion .p-num { color: #73540d; }
+.project-entry--finalist { border-left-color: var(--world-violet); background: linear-gradient(90deg, rgba(112,72,200,.055), transparent 46%); }
+.project-entry--live { border-left-color: var(--world-blue); background: linear-gradient(90deg, rgba(49,85,217,.05), transparent 48%); }
+.project-entry--security { border-left-color: var(--world-coral); }
+.project-entry--live .meta-link { padding: .4rem .7rem; background: var(--world-blue); }
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .project-entry:hover {
+    translate: 0 -2px;
+    background-color: color-mix(in srgb, var(--entry-accent) 4%, transparent);
+    box-shadow: none;
+  }
+
+  .project-entry--champion:hover {
+    translate: 0 -3px;
+    background: linear-gradient(115deg, #fff9e7, #fff);
+    box-shadow: 0 18px 34px -30px rgba(89,68,14,.62);
+  }
+}
+
+@media (max-width: 1024px) {
+  .contact-details-grid { border-left: 0; padding-left: 0; }
+}
+
+@media (max-width: 640px) {
+  .section-padding { padding-top: 3.25rem; padding-bottom: 3.25rem; }
+  .contact-card { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arena-world.is-ready { display: none !important; }
 }
